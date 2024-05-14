@@ -1,0 +1,67 @@
+server:
+  port: 8084
+
+spring:
+  application:
+    name: API-GATEWAY
+
+
+  cloud:
+    gateway:
+      routes:
+        - id: MICROSERVICE
+          uri: lb://MICROSERVICE
+          predicates:
+            - Path=/v1/versionControl/**,/v1/Release_management/**,/v1/Release_version/**,/v1/globalSDN/SiteManagement/**
+
+        - id: GLOBAL-CONTROLLER
+          uri: lb://GLOBAL-CONTROLLER
+          predicates:
+            - Path=/v1/**
+
+        - id: COMPANY-LOGO
+          uri: lb://COMPANY-LOGO
+          predicates:
+            - Path=/settings/company-logo/**
+
+        - id: NOTIFICATION
+          uri: lb://NOTIFICATION
+          predicates:
+              - Path=/**
+
+      default-filters:
+        - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            #              allowedOrigins: "http://192.168.0.106:3000"
+            allowedOriginPatterns: "*"
+            allowCredentials: true
+            allowedMethods: "*"
+            allowedHeaders: "*"
+    discovery:
+      enabled: true
+
+
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    fetch-registry: true
+    register-with-eureka: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+
+
+
+
+
+##okta configuration for api gateway
+#
+#okta:
+#  oauth2:
+#    issuer: https://dev-77584981.okta.com/oauth2/default
+#    audience: api://default
+#    client-id: 0oa7w65a24Px9Oyms5d7
+#    client-secret: JfsTTqODW21uapbbhKjW42sGzjcNs86GN7WL5dfU
+#    scopes: openid, profile, email, offline_access
