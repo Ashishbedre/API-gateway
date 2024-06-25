@@ -4,6 +4,11 @@ server:
 spring:
   application:
     name: API-GATEWAY
+#  security:
+#    oauth2:
+#      resourceserver:
+#        jwt:
+#          issuer-uri: http://192.168.0.240:31500/auth/realms/myrealm # Keycloak realm URL
 
 
   cloud:
@@ -23,6 +28,11 @@ spring:
           uri: lb://COMPANY-LOGO
           predicates:
             - Path=/settings/company-logo/**
+
+        - id: KEYCLOCK
+          uri: lb://KEYCLOCK
+          predicates:
+            - Path=/keycloak/**
 
         - id: NOTIFICATION
           uri: lb://NOTIFICATION
